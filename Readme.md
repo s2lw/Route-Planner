@@ -4,9 +4,9 @@
 This project optimizes routes for visiting infectious disease hospitals in Poland. It divides hospitals into 5 clusters and finds optimal routes for each cluster, minimizing the total travel distance for inspections. All routes start and end at the Ministry of Health in Warsaw.
 
 ## Features
-- Geocoding hospital addresses to coordinates
+- Translating hospital addresses to coordinates
 - Calculating road distances between locations using OSRM API
-- Dividing hospitals into optimally positioned clusters using K-means algorithm
+- Dividing hospitals into clusters using K-means algorithm
 - Solving the Traveling Salesman Problem for each cluster
 - Visualizing clusters and optimal routes on maps
 
