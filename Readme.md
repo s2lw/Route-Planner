@@ -39,7 +39,7 @@ The program outputs:
 - Total combined distance for all routes
 - Visualization of optimized clusters and routes
 
-![Final Solution](images/final_solution.png)
+![Solution](images/final_solution.png)
 <!-- Insert final solution visualization here -->
 
 ## Requirements
