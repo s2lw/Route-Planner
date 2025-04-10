@@ -19,8 +19,8 @@ def plot_clusters_and_routes(csv_path, clusters, cluster_paths):
         reader = csv.DictReader(file)
         for row in reader:
             place_id = int(row['Nr'])
-            cords = row['Cords'].strip('()')  # Remove parentheses
-            lon, lat = map(float, cords.split(', '))  # Split into longitude and latitude
+            cords = row['Cords'].strip('()')  
+            lon, lat = map(float, cords.split(', '))
             place_to_coords[place_id] = (lon, lat)
 
     # Approximate boundaries of Poland
@@ -62,9 +62,9 @@ def divide_places_into_clusters(input_csv, seed, n_clusters=5):
         n_clusters=n_clusters,
         random_state=seed,  # Seed for reproducibility
         init='k-means++',  # Smart initialization
-        n_init=20,         # Run 20 times with different seeds
-        max_iter=500,      # Increase maximum iterations
-        tol=1e-5           # Set a stricter convergence tolerance
+        n_init=20,         # 20 runs with different seeds 
+        max_iter=500,      # Maximum iterations
+        tol=1e-5           # Strict convergence tolerance
     )
     kmeans.fit(coordinates_to_cluster)
 
@@ -97,21 +97,20 @@ def plot_routes_on_map(cluster_paths, place_to_coords):
     map_center = [52.0, 19.0]  # Approximate center of Poland
     m = folium.Map(location=map_center, zoom_start=6)
 
-    # Define colors for clusters
+    # colors for clusters
     colors = ['red', 'blue', 'green', 'purple', 'orange']
 
     for cluster_id, path in enumerate(cluster_paths):
-        # Get coordinates for the current path
+        # Coordinates for the current path
         coords = [place_to_coords[place_id] for place_id in path]
 
-        # Fetch the real route
         try:
             route_coords = get_route(coords)
         except Exception as e:
             print(f"Error fetching route for cluster {cluster_id}: {e}")
             continue
 
-        # Add the route to the map
+        #Adding  the route to the map
         folium.PolyLine(
             locations=route_coords,
             color=colors[cluster_id],
@@ -120,7 +119,7 @@ def plot_routes_on_map(cluster_paths, place_to_coords):
             tooltip=f"Cluster {cluster_id + 1}"
         ).add_to(m)
 
-    # Save and display the map
+    #Save and display the map
     m.save("routes_map.html")
     return m
 
@@ -130,22 +129,19 @@ def get_route(coords):
     :param coords: List of (lon, lat) tuples.
     :return: List of (lon, lat) tuples representing the route.
     """
-    # Convert coordinates to OSRM format
+    # Converting coordinates to OSRM format
     coord_str = ";".join([f"{lon},{lat}" for lon, lat in coords])
     #print(coord_str)
     url = f"http://router.project-osrm.org/route/v1/driving/{coord_str}?overview=full&geometries=geojson"
 
-    # Make the request
     response = requests.get(url)
     if response.status_code != 200:
         raise Exception(f"OSRM request failed: {response.status_code}")
 
-    # Parse the response
     data = response.json()
     if data.get("code") != "Ok":
         raise Exception(f"OSRM error: {data.get('message')}")
 
-    # Extract the route geometry
     route_coords = data["routes"][0]["geometry"]["coordinates"]
     return [(lat, lon) for lon, lat in route_coords]
 
@@ -165,7 +161,7 @@ def main():
         if not cluster_places:
             continue
 
-        # Preparing TSP nodes: cluster places + start/end point (92)
+        # TSP nodes: cluster places + start/end point (92)
         cluster_nrs = [place['Nr'] for place in cluster_places]
         tsp_nrs = [start_end_id] + cluster_nrs
         tsp_indices = [nr - 1 for nr in tsp_nrs]  # Converting to 0-based indices
@@ -176,7 +172,7 @@ def main():
             for i in tsp_indices
         ]
 
-        # Solve TSP
+        #TSP
         sub_matrix = np.array(sub_matrix)  # Convert list of lists to NumPy array
         permutation, distance = solve_tsp_simulated_annealing(sub_matrix)
 
@@ -195,13 +191,13 @@ def main():
         cluster_paths.append(path)
         cluster_distances.append(distance)
 
-    # Print distances for each cluster
+    # Show distances for each cluster
     total_distance = sum(cluster_distances)
     for i, dist in enumerate(cluster_distances):
         print(f"Cluster {i} route distance: {dist} km")
     print(f"Total sum of distances: {total_distance} km")
 
-    # Load place coordinates
+    # Loading place coordinates
     places, _ = load_places(input_csv)
     place_to_coords = {place['Nr']: tuple(map(float, place['Cords'].strip('()').split(', '))) for place in places}
 
