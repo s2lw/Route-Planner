@@ -1,7 +1,7 @@
 # Cluster Route Planner
 
 ## Overview
-This project optimizes routes for visiting infectious disease hospitals in Poland. It divides hospitals into 5 clusters and finds optimal routes for each cluster, minimizing the total travel distance for inspections. All routes start and end at the Ministry of Health in Warsaw.
+This project optimizes routes for visiting infectious disease hospitals in Poland. It divides hospitals into 5 clusters and finds optimal routes for each cluster, minimizing the total travel distance for inspections. The optimization is based on minimizing the total length of the travel routes. All routes start and end at the Ministry of Health in Warsaw.
 
 ## Features
 - Translating hospital addresses to coordinates
