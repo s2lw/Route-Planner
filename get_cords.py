@@ -15,13 +15,13 @@ def get_coordinates(address):
         location = geolocator.geocode(address)
         if location:
             coords = (location.longitude, location.latitude)
-            print(f"✅ Znaleziono: {coords}\n")
+            print(f"Znaleziono: {coords}\n")
             return coords
         else:
-            print(f"⚠️ Nie znaleziono współrzędnych dla: {address}\n")
+            print(f"Nie znaleziono współrzędnych dla: {address}\n")
             return None
     except Exception as e:
-        print(f"❌ Błąd podczas pobierania współrzędnych dla {address}: {e}\n")
+        print(f"Błąd podczas pobierania współrzędnych dla {address}: {e}\n")
         return None
 def download_cords_and_create_csv(excel_file_path, csv_file_path):
     # CSV file header
